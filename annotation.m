@@ -22,7 +22,7 @@ function varargout = annotation(varargin)
 
 % Edit the above text to modify the response to help annotation
 
-% Last Modified by GUIDE v2.5 30-Nov-2016 10:25:15
+% Last Modified by GUIDE v2.5 30-Nov-2016 10:34:46
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -101,3 +101,38 @@ function pushbuttonPath_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbuttonPath (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    folderName = uigetdir('.','Select a folder containing camera subfolders');
+    if isequal(folderName, 0)
+        disp('User should select folder containing cameras to start...');
+        return;
+    end
+    set(handles.editPath,'String',folderName);
+    directory = dir(folderName);
+    realFolders = [directory(:).isdir];
+    subfolders = {directory(realFolders).name}';
+    subfolders(ismember(subfolders,{'.','..'})) = [];
+    set(handles.listboxCameras,'String',subfolders);
+    
+
+
+% --- Executes on selection change in listboxCameras.
+function listboxCameras_Callback(hObject, eventdata, handles)
+% hObject    handle to listboxCameras (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns listboxCameras contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from listboxCameras
+
+
+% --- Executes during object creation, after setting all properties.
+function listboxCameras_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to listboxCameras (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

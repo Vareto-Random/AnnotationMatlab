@@ -188,9 +188,17 @@ function listboxTracklets_Callback(hObject, eventdata, handles)
     tracklet = char(trackletFolder(trackletIndex));
     folderPath = [path '/' camera '/' tracklet];
     
+    % get path to all images
     gallery = imageSet(folderPath);
     
-    
+    step = ceil(gallery.Count / 20);
+    counter = 1;
+    for index = 1 : step : gallery.Count
+        crop = read(gallery, index);
+        image = imresize(crop, [120 60]);
+        images{counter} = image;
+        counter = counter + 1;
+    end
 
 
 % --- Executes during object creation, after setting all properties.

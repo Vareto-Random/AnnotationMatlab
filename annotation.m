@@ -190,15 +190,34 @@ function listboxTracklets_Callback(hObject, eventdata, handles)
     
     % get path to all images
     gallery = imageSet(folderPath);
+    numSamples = 24;
     
-    step = ceil(gallery.Count / 20);
+    % reading images
     counter = 1;
+    images = cell(1, numSamples);
+    step = floor(gallery.Count / numSamples);
     for index = 1 : step : gallery.Count
         crop = read(gallery, index);
         image = imresize(crop, [120 60]);
         images{counter} = image;
         counter = counter + 1;
     end
+    
+    % ensuring 24 samples
+    samples = images(1:numSamples);
+    
+    % concatenating all images
+    collate01 = [];
+    collate02 = [];
+    collate03 = [];
+    for index = 1 : 8
+        collate01 = [collate01 cell2mat(images(index))];
+        collate02 = [collate02 cell2mat(images(index + 8))];
+        collate03 = [collate03 cell2mat(images(index + 16))];
+    end
+    collate = [collate01;collate02;collate03];
+    imshow(collate);
+    
 
 
 % --- Executes during object creation, after setting all properties.

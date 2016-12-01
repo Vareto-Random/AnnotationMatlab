@@ -22,7 +22,7 @@ function varargout = annotation(varargin)
 
     % Edit the above text to modify the response to help annotation
 
-    % Last Modified by GUIDE v2.5 30-Nov-2016 16:08:57
+    % Last Modified by GUIDE v2.5 01-Dec-2016 11:00:58
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -119,6 +119,7 @@ function pushbuttonPath_Callback(hObject, eventdata, handles)
     % populating listboxCameras
     set(handles.listboxCameras,'String',subfolders);
     set(handles.listboxCameras,'Enable','on');
+    drawnow;
     
 
 
@@ -183,29 +184,6 @@ function listboxCameras_CreateFcn(hObject, eventdata, handles)
     end
 
 
-% --- Executes on selection change in listboxVideos.
-function listboxVideos_Callback(hObject, eventdata, handles)
-    % hObject    handle to listboxVideos (see GCBO)
-    % eventdata  reserved - to be defined in a future version of MATLAB
-    % handles    structure with handles and user data (see GUIDATA)
-
-    % Hints: contents = cellstr(get(hObject,'String')) returns listboxVideos contents as cell array
-    %        contents{get(hObject,'Value')} returns selected item from listboxVideos
-
-
-% --- Executes during object creation, after setting all properties.
-function listboxVideos_CreateFcn(hObject, eventdata, handles)
-    % hObject    handle to listboxVideos (see GCBO)
-    % eventdata  reserved - to be defined in a future version of MATLAB
-    % handles    empty - handles not created until after all CreateFcns called
-
-    % Hint: listbox controls usually have a white background on Windows.
-    %       See ISPC and COMPUTER.
-    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-        set(hObject,'BackgroundColor','white');
-    end
-
-
 % --- Executes on selection change in listboxTracklets.
 function listboxTracklets_Callback(hObject, eventdata, handles)
     % hObject    handle to listboxTracklets (see GCBO)
@@ -214,6 +192,8 @@ function listboxTracklets_Callback(hObject, eventdata, handles)
 
     % Hints: contents = cellstr(get(hObject,'String')) returns listboxTracklets contents as cell array
     %        contents{get(hObject,'Value')} returns selected item from listboxTracklets
+    disp('Testando');
+    
 
 
 % --- Executes during object creation, after setting all properties.
@@ -227,3 +207,47 @@ function listboxTracklets_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
+
+
+% --- Executes on selection change in popupmenuSubjects.
+function popupmenuSubjects_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenuSubjects (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenuSubjects contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenuSubjects
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenuSubjects_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenuSubjects (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbuttonNext.
+function pushbuttonNext_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbuttonNext (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbuttonBack.
+function pushbuttonBack_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbuttonBack (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in checkboxRemove.
+function checkboxRemove_Callback(hObject, eventdata, handles)
+% hObject    handle to checkboxRemove (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

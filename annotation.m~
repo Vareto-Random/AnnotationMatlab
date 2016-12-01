@@ -183,12 +183,10 @@ function listboxTracklets_Callback(hObject, eventdata, handles)
     trackletIndex = get(handles.listboxTracklets,'Value');
     trackletFolder = get(handles.listboxTracklets,'String');
     
-    % generating final path
     camera = char(cameraFolder(cameraIndex));
     tracklet = char(trackletFolder(trackletIndex));
-    folderPath = [path '/' camera '/' tracklet];
     
-    gallery = imageSet(folderPath);
+    folderPath = [path '/' camera '/' tracklet];
     
     
 

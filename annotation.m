@@ -22,7 +22,7 @@ function varargout = annotation(varargin)
 
     % Edit the above text to modify the response to help annotation
 
-    % Last Modified by GUIDE v2.5 01-Dec-2016 11:00:58
+    % Last Modified by GUIDE v2.5 01-Dec-2016 22:14:24
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -116,12 +116,16 @@ function pushbuttonPath_Callback(hObject, eventdata, handles)
     subfolders = {directory(realFolders).name}';
     subfolders(ismember(subfolders,{'.','..'})) = [];
     
+    % creating structure
+    global controlVariable;
+    controlVariable.tracklet = cell(size(subfolders));
+    controlVariable.subject = cell(size(subfolders));
+    
     % populating listboxCameras
     set(handles.listboxCameras,'String',subfolders);
     set(handles.listboxCameras,'Enable','on');
     drawnow;
     
-
 
 % --- Executes on selection change in listboxCameras.
 function listboxCameras_Callback(hObject, eventdata, handles)
@@ -235,43 +239,82 @@ function listboxTracklets_CreateFcn(hObject, eventdata, handles)
 
 % --- Executes on selection change in popupmenuSubjects.
 function popupmenuSubjects_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenuSubjects (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+    % hObject    handle to popupmenuSubjects (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenuSubjects contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenuSubjects
+    % Hints: contents = cellstr(get(hObject,'String')) returns popupmenuSubjects contents as cell array
+    %        contents{get(hObject,'Value')} returns selected item from popupmenuSubjects
+
+    % get components and index
+    contents = cellstr(get(hObject,'String'));
+    index = get(hObject,'Value');
+
+    % get indices
+    cameraIndex = get(handles.listboxCameras,'Value');
+    trackletIndex = get(handles.listboxTracklets,'Value');
+    trackletFolder = get(handles.listboxTracklets,'String');
+
+    % save to matrix
+    global controlVariable;
+    controlVariable.tracklet{cameraIndex,trackletIndex} = trackletFolder(trackletIndex);
+    controlVariable.subject{cameraIndex,trackletIndex} = contents(index);
 
 
 % --- Executes during object creation, after setting all properties.
 function popupmenuSubjects_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenuSubjects (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+    % hObject    handle to popupmenuSubjects (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+    % Hint: popupmenu controls usually have a white background on Windows.
+    %       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
 
 
 % --- Executes on button press in pushbuttonNext.
 function pushbuttonNext_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbuttonNext (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+    % hObject    handle to pushbuttonNext (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes on button press in pushbuttonBack.
 function pushbuttonBack_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbuttonBack (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+    % hObject    handle to pushbuttonBack (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in checkboxRemove.
-function checkboxRemove_Callback(hObject, eventdata, handles)
-% hObject    handle to checkboxRemove (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% --- Executes on button press in pushbuttonSave.
+function pushbuttonSave_Callback(hObject, eventdata, handles)
+    % hObject    handle to pushbuttonSave (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
+    
+    global controlVariable;
+    
+    % getting values from interface
+    path = get(handles.editPath,'String');
+    index = get(handles.listboxCameras,'Value');
+    folders = get(handles.listboxCameras,'String');
+    
+    for row = 1 : size(controlVariable.tracklet,1)
+        % appending subfolder
+        folder = char(folders(row));
+        folderPath = [path '/' folder];
+        fileName = [folder '_annotation_file.txt'];
+        fileID = fopen([folderPath '/' fileName],'w');
+        for col = 1 : size(controlVariable.tracklet,2)
+            if ~isempty(controlVariable.tracklet{row,col})
+                tracklet = char(controlVariable.tracklet{row,col});
+                label = char(controlVariable.subject{row,col});
+                fprintf(fileID,'%s %s\n',tracklet,label);
+            end
+        end
+        fclose(fileID);
+    end
+    
+

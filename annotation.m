@@ -22,7 +22,7 @@ function varargout = annotation(varargin)
 
     % Edit the above text to modify the response to help annotation
 
-    % Last Modified by GUIDE v2.5 01-Dec-2016 22:14:24
+    % Last Modified by GUIDE v2.5 02-Dec-2016 00:25:20
 
     % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -247,8 +247,8 @@ function popupmenuSubjects_Callback(hObject, eventdata, handles)
     %        contents{get(hObject,'Value')} returns selected item from popupmenuSubjects
 
     % get components and index
-    contents = cellstr(get(hObject,'String'));
-    index = get(hObject,'Value');
+    contents = cellstr(get(handles.popupmenuSubjects,'String'));
+    index = get(handles.popupmenuSubjects,'Value');
 
     % get indices
     cameraIndex = get(handles.listboxCameras,'Value');
@@ -279,6 +279,15 @@ function pushbuttonNext_Callback(hObject, eventdata, handles)
     % hObject    handle to pushbuttonNext (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
+    trackletFolder = get(handles.listboxTracklets,'String');
+    trackletIndex = get(handles.listboxTracklets,'Value');
+    
+    if trackletIndex < size(trackletFolder,1)
+        trackletIndex = trackletIndex + 1;
+        set(handles.listboxTracklets,'Value',trackletIndex);
+        listboxTracklets_Callback(hObject, eventdata, handles);
+        popupmenuSubjects_Callback(hObject, eventdata, handles)
+    end
 
 
 % --- Executes on button press in pushbuttonBack.
@@ -286,6 +295,14 @@ function pushbuttonBack_Callback(hObject, eventdata, handles)
     % hObject    handle to pushbuttonBack (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
+    trackletIndex = get(handles.listboxTracklets,'Value');
+    
+    if trackletIndex > 1
+        trackletIndex = trackletIndex - 1;
+        set(handles.listboxTracklets,'Value',trackletIndex);
+        listboxTracklets_Callback(hObject, eventdata, handles);
+        popupmenuSubjects_Callback(hObject, eventdata, handles)
+    end
 
 
 % --- Executes on button press in pushbuttonSave.
@@ -298,7 +315,6 @@ function pushbuttonSave_Callback(hObject, eventdata, handles)
     
     % getting values from interface
     path = get(handles.editPath,'String');
-    index = get(handles.listboxCameras,'Value');
     folders = get(handles.listboxCameras,'String');
     
     for row = 1 : size(controlVariable.tracklet,1)
@@ -306,9 +322,12 @@ function pushbuttonSave_Callback(hObject, eventdata, handles)
         folder = char(folders(row));
         folderPath = [path '/' folder];
         fileName = [folder '_annotation_file.txt'];
+        
+        % opening file in folder cam$$
         fileID = fopen([folderPath '/' fileName],'w');
         for col = 1 : size(controlVariable.tracklet,2)
             if ~isempty(controlVariable.tracklet{row,col})
+                % printing to file
                 tracklet = char(controlVariable.tracklet{row,col});
                 label = char(controlVariable.subject{row,col});
                 label = strrep(label,' ','');
@@ -318,4 +337,3 @@ function pushbuttonSave_Callback(hObject, eventdata, handles)
         fclose(fileID);
     end
     
-

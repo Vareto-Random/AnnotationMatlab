@@ -311,6 +311,7 @@ function pushbuttonSave_Callback(hObject, eventdata, handles)
             if ~isempty(controlVariable.tracklet{row,col})
                 tracklet = char(controlVariable.tracklet{row,col});
                 label = char(controlVariable.subject{row,col});
+                label = strrep(label,' ','');
                 fprintf(fileID,'%s %s\n',tracklet,label);
             end
         end
